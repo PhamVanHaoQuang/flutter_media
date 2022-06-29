@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1000265173919",
+    "project_id": "fir-learn-46071",
+    "storage_bucket": "fir-learn-46071.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000265173919:android:23388ae3b6b1503b450baa",
+        "android_client_info": {
+          "package_name": "com.example.flutter_learn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000265173919-tvvj5umjltgbc0ohsqmlcrf93f3n1b6n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS9lgUIqB0pa4U5t5ZWbObIFrjAv03KaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000265173919-tvvj5umjltgbc0ohsqmlcrf93f3n1b6n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
