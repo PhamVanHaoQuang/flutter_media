@@ -6,8 +6,6 @@ part 'file_picker_state.dart';
 
 class FilePickerBloc extends Bloc<FilePickerEvent, FilePickerState> {
   FilePickerBloc() : super(FilePickerInitial()) {
-    on<FilePickerEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<FilePickerEvent>((event, emit) {});
   }
 }
