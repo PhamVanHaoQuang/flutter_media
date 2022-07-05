@@ -64,7 +64,7 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
       });
 
       final urlDownload = await snapshot.ref.getDownloadURL();
-      print('Quang File: $urlDownload');
+   
 
       setState(() {
         uploadTask = null;

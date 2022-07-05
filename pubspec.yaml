@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 2.0.0+1
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -42,6 +42,10 @@ dependencies:
   dio: ^4.0.6
   path_provider: ^2.0.11
   gallery_saver: ^2.3.2
+  open_file: ^3.2.1
+  pdfx: ^2.0.1+2
+  internet_file: ^1.0.0+2
+  shared_preferences: ^2.0.15
 
   # Package to play video
   chewie: ^1.3.4

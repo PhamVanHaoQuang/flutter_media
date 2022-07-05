@@ -23,4 +23,8 @@ class FirebaseApi {
       return null;
     }
   }
+
+  static Future<List<String>> getDownloadLinks(List<Reference> refs) =>
+      Future.wait(refs.map((ref) => ref.getDownloadURL()));
+
 }

@@ -9,12 +9,14 @@ class VideoItem extends StatefulWidget {
     Key? key,
     this.looping,
     this.autoplay,
-    required this.file,
+    this.file,
+    this.link,
   }) : super(key: key);
 
   final bool? looping;
   final bool? autoplay;
-  final File file;
+  final File? file;
+  final String? link;
 
   @override
   State<VideoItem> createState() => _VideoItemState();
@@ -28,11 +30,14 @@ class _VideoItemState extends State<VideoItem> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    _videoPlayerController = VideoPlayerController.file(widget.file,
-        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false));
+    (widget.link == null)
+        ? _videoPlayerController = VideoPlayerController.file(widget.file!,
+            videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false))
+        : _videoPlayerController = VideoPlayerController.network(widget.link!,
+            videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false));
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      aspectRatio: 5 / 8,
+      aspectRatio: 8 / 8,
       autoInitialize: true,
       autoPlay: widget.autoplay ?? false,
       looping: widget.looping ?? false,

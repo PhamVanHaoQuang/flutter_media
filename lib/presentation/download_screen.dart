@@ -1,10 +1,7 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:gallery_saver/gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
+
+import 'download_folder_screen.dart';
 
 class DownloadScreen extends StatefulWidget {
   const DownloadScreen({Key? key}) : super(key: key);
@@ -15,14 +12,57 @@ class DownloadScreen extends StatefulWidget {
 
 class _DownloadScreenState extends State<DownloadScreen> {
   late Future<ListResult> futureFiles;
+  List<Reference> videoFiles = <Reference>[];
+  List<Reference> imageFiles = <Reference>[];
+  List<Reference> musicFiles = <Reference>[];
+  List<Reference> documentFiles = <Reference>[];
   Map<int, double?> downloadProgress = {};
-
-  bool checkAbleToDownload = true;
 
   @override
   void initState() {
     super.initState();
     futureFiles = FirebaseStorage.instance.ref('/files').list();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await splitList().whenComplete(() {
+        setState(() {});
+      });
+    });
+  }
+
+  Future<void> splitList() async {
+    ListResult listFiles = await futureFiles;
+    for (final Reference element in listFiles.items) {
+      String extension = element.name.split(RegExp(r"(\.+)")).last;
+
+      switch (extension) {
+        case 'mp4':
+        case 'oob':
+          videoFiles.add(element);
+          break;
+
+        case 'png':
+        case 'jpg':
+        case 'jpge':
+          imageFiles.add(element);
+          break;
+
+        case 'mp3':
+        case 'ogg':
+          musicFiles.add(element);
+          break;
+
+        case 'pdf':
+        case 'docx':
+        case 'doc':
+        case 'txt':
+          documentFiles.add(element);
+          break;
+
+        default:
+          documentFiles.add(element);
+          break;
+      }
+    }
   }
 
   @override
@@ -34,114 +74,77 @@ class _DownloadScreenState extends State<DownloadScreen> {
           child: const SizedBox(
             height: 40,
             width: 40,
-            child: Center(child: Icon(Icons.arrow_left_outlined)),
+            child: Center(
+                child: Icon(
+              Icons.arrow_left_outlined,
+              size: 40,
+            )),
           ),
           onTap: () {
             Navigator.of(context).pop();
           },
         ),
       ),
-      body: FutureBuilder<ListResult>(
-        future: futureFiles,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final files = snapshot.data!.items;
-            return ListView.builder(
-              itemCount: files.length,
-              itemBuilder: (context, index) {
-                final file = files[index];
-                double? progress = downloadProgress[index];
-                return ListTile(
-                  title: Text(
-                    file.name,
-                    maxLines: 2,
-                  ),
-                  subtitle: progress != null
-                      ? LinearProgressIndicator(
-                          value: progress,
-                          color: Colors.white,
-                        )
-                      : null,
-                  trailing: IconButton(
-                    icon: const Icon(Icons.download),
-                    onPressed: () {
-                      if (checkAbleToDownload) {
-                        setState((() => checkAbleToDownload = false));
-                        downloadFile(index, file).whenComplete(() => setState(
-                              () => checkAbleToDownload = true,
-                            ));
-                      }
-                    },
-                  ),
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Error occurred'),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+      body: Column(
+        children: [
+          DownloadFolderItemWidget(
+            title: 'Document',
+            subtitle: documentFiles.length.toString() + ' files',
+            icon: const Icon(Icons.description_outlined),
+            color: Colors.orange[400],
+            onTap: () {
+              Navigator.of(context).pushNamed('/list_file', arguments: {
+                'title': 'Document',
+                'files': documentFiles,
+                'icon': const Icon(Icons.description_outlined),
+                'color': Colors.orange[400],
+              });
+            },
+          ),
+          DownloadFolderItemWidget(
+            title: 'Videos',
+            subtitle: videoFiles.length.toString() + ' files',
+            icon: const Icon(Icons.video_library_rounded),
+            color: Colors.purple[400],
+            onTap: () {
+              Navigator.of(context).pushNamed('/list_file', arguments: {
+                'title': 'Videos',
+                'files': videoFiles,
+                'icon': const Icon(Icons.video_library_rounded),
+                'color': Colors.purple[400],
+              });
+            },
+          ),
+          DownloadFolderItemWidget(
+            title: 'Images',
+            subtitle: imageFiles.length.toString() + ' files',
+            icon: const Icon(Icons.image),
+            color: Colors.pink[400],
+            onTap: () {
+              Navigator.of(context).pushNamed('/list_file', arguments: {
+                'title': 'Images',
+                'files': imageFiles,
+                'icon': const Icon(Icons.image),
+                'color': Colors.pink[400],
+              });
+            },
+          ),
+          DownloadFolderItemWidget(
+            title: 'Music',
+            subtitle: musicFiles.length.toString() + ' files',
+            icon: const Icon(Icons.music_note_rounded),
+            color: Colors.lightBlue[200],
+            onTap: () {
+              Navigator.of(context).pushNamed('/list_file', arguments: {
+                'title': 'Music',
+                'files': musicFiles,
+                'icon': const Icon(Icons.music_note_rounded),
+                'color': Colors.lightBlue[200],
+              });
+            },
+          ),
+        ],
       ),
-    );
-  }
-
-  Future downloadFile(int index, Reference ref) async {
-    /// Download from the app
-    // final dir = await getApplicationDocumentsDirectory();
-    // final file = File('${dir.path}/${ref.name}');
-    // await ref.writeToFile(file);
-
-    /// User download from the phone
-    /// Visible to User Inside Gallery
-
-    final url = await ref.getDownloadURL();
-
-    final temDir = await getTemporaryDirectory();
-    final appDir = await getApplicationDocumentsDirectory();
-    final path = '${temDir.path}/${ref.name}';
-    File downloadToFile = File(appDir.path);
-
-
-    await Dio().download(url, path, onReceiveProgress: (received, total) {
-      double? progress = received / total;
-      setState(() {
-        downloadProgress[index] = progress;
-      });
-    }).whenComplete(() {
-      downloadProgress[index] = null;
-      setState(() {});
-    });
-
-    //final result = await platFormChannel.invokeMethod('save',{'file' : path , 'name' : 'cho'});
-
-   // print(result);
-
- 
-
-    if (url.contains('.mp4') || url.contains('.mp3')) {
-      await GallerySaver.saveVideo(path, toDcim: true);
-    } else if (url.contains('.jpg') || url.contains('.png')) {
-      await GallerySaver.saveImage(path, toDcim: true);
-    } else if (url.contains('.pdf') || url.contains('.docx')) {
-      // await FilePicker.platform.saveFile(
-      //     fileName: url,
-      //     lockParentWindow: true,
-      //     type: FileType.custom,
-      //     allowedExtensions: ['pdf', 'docx']);
-
-      await FirebaseStorage.instance
-          .refFromURL(url)
-          .writeToFile(downloadToFile);
-    }
-
-    /// Show to UI result
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Download ${ref.name}')),
     );
   }
 }
