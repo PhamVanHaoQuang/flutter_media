@@ -64,7 +64,6 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
       });
 
       final urlDownload = await snapshot.ref.getDownloadURL();
-   
 
       setState(() {
         uploadTask = null;
@@ -182,29 +181,33 @@ class _FilePickerScreenState extends State<FilePickerScreen> {
         const SizedBox(
           height: 16,
         ),
-        InkWell(
-            onTap: () {
-              (pickerFile != null) ? uploadFile() : null;
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(18),
-              ),
-              height: 40,
-              width: 100,
-              child: Center(
-                child: Text(
-                  (isUploadDone == false)
-                      ? ((uploadTask == null) ? 'Upload ' : 'Uploading')
-                      : 'Uploaded',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: (pickerFile != null) ? Colors.white : Colors.white54,
+        (pickerFile != null)
+            ? InkWell(
+                onTap: () {
+                  (pickerFile != null) ? uploadFile() : null;
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(18),
                   ),
-                ),
-              ),
-            )),
+                  height: 40,
+                  width: 100,
+                  child: Center(
+                    child: Text(
+                      (isUploadDone == false)
+                          ? ((uploadTask == null) ? 'Upload ' : 'Uploading')
+                          : 'Uploaded',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: (pickerFile != null)
+                            ? Colors.white
+                            : Colors.white54,
+                      ),
+                    ),
+                  ),
+                ))
+            : const SizedBox(height: 40),
         Padding(
           padding: const EdgeInsets.only(bottom: 0),
           child: buildProgress(),
