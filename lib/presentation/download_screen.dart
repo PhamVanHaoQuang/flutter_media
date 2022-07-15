@@ -93,7 +93,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             icon: const Icon(Icons.description_outlined),
             color: Colors.orange[400],
             onTap: () {
-              Navigator.of(context).pushNamed('/list_file', arguments: {
+              Navigator.of(context).pushNamed('/list-file', arguments: {
                 'title': 'Document',
                 'files': documentFiles,
                 'icon': const Icon(Icons.description_outlined),
@@ -107,7 +107,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             icon: const Icon(Icons.video_library_rounded),
             color: Colors.purple[400],
             onTap: () {
-              Navigator.of(context).pushNamed('/list_file', arguments: {
+              Navigator.of(context).pushNamed('/list-file', arguments: {
                 'title': 'Videos',
                 'files': videoFiles,
                 'icon': const Icon(Icons.video_library_rounded),
@@ -121,7 +121,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             icon: const Icon(Icons.image),
             color: Colors.pink[400],
             onTap: () {
-              Navigator.of(context).pushNamed('/list_file', arguments: {
+              Navigator.of(context).pushNamed('/list-file', arguments: {
                 'title': 'Images',
                 'files': imageFiles,
                 'icon': const Icon(Icons.image),
@@ -135,7 +135,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             icon: const Icon(Icons.music_note_rounded),
             color: Colors.lightBlue[200],
             onTap: () {
-              Navigator.of(context).pushNamed('/list_file', arguments: {
+              Navigator.of(context).pushNamed('/list-file', arguments: {
                 'title': 'Music',
                 'files': musicFiles,
                 'icon': const Icon(Icons.music_note_rounded),
