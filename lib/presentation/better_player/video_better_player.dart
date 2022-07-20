@@ -430,77 +430,64 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
     final isMute = (controller.videoPlayerController?.value.volume ?? 0) > 0;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                InkWell(
-                  onTap: () async {
-                    if (isMute) {
-                      controller.setVolume(0);
-                    } else {
-                      controller.setVolume(1);
-                    }
-                    setState(() {});
-                  },
-                  child: (isMute)
-                      ? const Icon(
-                          Icons.volume_up_outlined,
-                          color: Colors.white,
-                        )
-                      : const Icon(
-                          Icons.volume_off_outlined,
-                          color: Colors.white,
-                        ),
-                ),
-                Expanded(child: customProgressBar()),
-                Text(
-                  formatedTime(controller
-                          .videoPlayerController?.value.duration?.inSeconds ??
-                      0),
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                InkWell(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.purple.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        controller.isFullScreen
-                            ? Icons.fullscreen_exit
-                            : Icons.fullscreen,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              InkWell(
+                onTap: () async {
+                  if (isMute) {
+                    controller.setVolume(0);
+                  } else {
+                    controller.setVolume(1);
+                  }
+                  setState(() {});
+                },
+                child: (isMute)
+                    ? const Icon(
+                        Icons.volume_up_outlined,
                         color: Colors.white,
-                        size: 28,
+                      )
+                    : const Icon(
+                        Icons.volume_off_outlined,
+                        color: Colors.white,
                       ),
-                    ),
+              ),
+              Expanded(child: customProgressBar()),
+              Text(
+                formatedTime(controller
+                        .videoPlayerController?.value.duration?.inSeconds ??
+                    0),
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    controller.isFullScreen
+                        ? Icons.fullscreen_exit
+                        : Icons.fullscreen,
+                    color: Colors.white,
+                    size: 28,
                   ),
-                  onTap: () {
-                    if (controller.isFullScreen) {
-                      controller.exitFullScreen();
-                    } else {
-                      controller.enterFullScreen();
-                    }
-                  },
                 ),
-              ],
-            ),
-          ],
-        ),
+                onTap: () {
+                  if (controller.isFullScreen) {
+                    controller.exitFullScreen();
+                  } else {
+                    controller.enterFullScreen();
+                  }
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
