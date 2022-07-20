@@ -3,6 +3,10 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_learn/helper/formated_time.dart';
+import 'package:flutter_learn/presentation/better_player/widget/build_change_track.dart';
+import 'package:flutter_learn/presentation/better_player/widget/build_speed.dart';
+import 'package:flutter_learn/presentation/better_player/widget/custom_middle_control_video.dart';
+import 'package:flutter_learn/presentation/better_player/widget/custom_top_control_video.dart';
 
 class VideoBetterPlayerScreen extends StatefulWidget {
   final String linkUrl;
@@ -19,10 +23,12 @@ class VideoBetterPlayerScreen extends StatefulWidget {
 class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
   late BetterPlayerConfiguration betterPlayerConfiguration;
   late BetterPlayerController controller;
-  double progress = 0.0;
+  double? progress = 0.0;
   final GlobalKey<ScaffoldState> videoScaffold = GlobalKey();
 
   List<BetterPlayerAsmsTrack> listTracks = [];
+  List<double> listSpeed = [0.25, 0.5, 1.0, 1.5, 1.75, 2.0];
+  double currentSpeed = 1.0;
 
   @override
   void initState() {
@@ -57,11 +63,10 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
   _videoEventsListener(BetterPlayerEvent event) {
     switch (event.betterPlayerEventType) {
       case BetterPlayerEventType.initialized:
-        final tracks = controller.betterPlayerAsmsTracks;
         setState(() {
           listTracks = controller.betterPlayerAsmsTracks;
         });
-        for (var element in tracks) {
+        for (var element in listTracks) {
           print('###track width ${element.width}, height ${element.height}');
           print(
               '###track bitrate ${element.bitrate}, codecs ${element.codecs}');
@@ -181,8 +186,14 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _customTopVideo(),
-              _customMiddleVideo(),
+              CustomTopControlVideo(
+                onShowBottomSheet: showBottomSheet,
+              ),
+
+              CustomMiddleControlVideo(
+                controller: controller,
+              ),
+              //   _customMiddleVideo(),
               _customBottomVideo()
             ],
           ),
@@ -191,251 +202,228 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
     );
   }
 
-  Widget _customTopVideo() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.chevron_left_outlined,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                ),
-              ),
-              onTap: () {
-                controller.dispose();
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
+  void showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: InkWell(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20),
+      ),
+      builder: (context) => Padding(
+        padding:
+            const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 80),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Cài đặt',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            InkWell(
+              onTap: showQuanlityBottomSheet,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-                builder: (context) => Padding(
-                  padding: const EdgeInsets.only(
-                      top: 24, left: 16, right: 16, bottom: 24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20),
-                              ),
-                            ),
-                            builder: (context) => Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 24, left: 16, right: 16, bottom: 24),
-                              child: ListView(
-                                children:
-                                    listTracks.map(_buildChangeTrack).toList(),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.settings_outlined,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Text(
-                              'Quanlity',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
+                  Row(
+                    children: const [
+                      SizedBox(
+                        width: 15,
                       ),
-                      const SizedBox(
-                        height: 32,
+                      Text(
+                        'Quanlity',
+                        style: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.black),
                       ),
-                      InkWell(
-                        onTap: () {},
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.slow_motion_video_outlined,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Text(
-                              'Speed',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.closed_caption,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Text(
-                              'Subtitles',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
-                      )
                     ],
                   ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            InkWell(
+              onTap: showSpeedBottomSheet,
+              child: Row(
+                children: const [
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    'Speed',
+                    style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.black),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 32,
+            ),
+            InkWell(
+              onTap: () {},
+              child: Row(
+                children: const [
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    'Subtitles',
+                    style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.black),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showQuanlityBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (context) => Padding(
+        padding:
+            const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                InkWell(
+                  child: const Icon(
+                    Icons.chevron_left_outlined,
+                    color: Colors.black,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                 ),
-              );
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.purple.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: const Icon(
-                Icons.more_vert_outlined,
-                color: Colors.white,
+                const SizedBox(
+                  width: 8,
+                ),
+                const Text(
+                  'Cài đặt',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 420),
+              child: ListView(
+                shrinkWrap: true,
+                children: listTracks
+                    .map((track) =>
+                        BuildChangedTrack(track: track, setTrack: setTrack))
+                    .toList(),
               ),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildChangeTrack(BetterPlayerAsmsTrack track) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: TextButton(
-        onPressed: () {
-          controller.setTrack(track);
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-        child: Text(
-          '${track.width}x${track.height}',
-          style: const TextStyle(color: Colors.white, fontSize: 16),
+          ],
         ),
       ),
     );
   }
 
-  Widget _customMiddleVideo() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.purple.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          InkWell(
-            onTap: () async {
-              Duration? videoDuration =
-                  await controller.videoPlayerController?.position;
-              setState(() {
-                if (controller.isPlaying()!) {
-                  Duration rewindDuration =
-                      Duration(seconds: (videoDuration!.inSeconds - 2));
-                  if (rewindDuration <
-                      controller.videoPlayerController!.value.duration!) {
-                    controller.seekTo(const Duration(seconds: 0));
-                  } else {
-                    controller.seekTo(rewindDuration);
-                  }
-                }
-              });
-            },
-            child: const Icon(
-              Icons.replay_10_rounded,
-              color: Colors.white,
+  void setTrack(BetterPlayerAsmsTrack track) {
+    controller.setTrack(track);
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
+  void showSpeedBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding:
+            const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                InkWell(
+                  child: const Icon(
+                    Icons.chevron_left_outlined,
+                    color: Colors.black,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                const Text(
+                  'Cài đặt',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ),
-          InkWell(
-            onTap: () {
-              setState(() {
-                if (controller.isPlaying()!) {
-                  controller.pause();
-                } else {
-                  controller.play();
-                }
-              });
-            },
-            child: Icon(
-              controller.isPlaying()! ? Icons.pause : Icons.play_arrow,
-              color: Colors.white,
+            const SizedBox(
+              height: 20,
             ),
-          ),
-          InkWell(
-            onTap: () async {
-              Duration? videoDuration =
-                  await controller.videoPlayerController?.position;
-              setState(() {
-                if (controller.isPlaying()!) {
-                  Duration forwardDuration =
-                      Duration(seconds: (videoDuration!.inSeconds + 2));
-                  if (forwardDuration >
-                      controller.videoPlayerController!.value.duration!) {
-                    controller.seekTo(const Duration(seconds: 0));
-                    controller.pause();
-                  } else {
-                    controller.seekTo(forwardDuration);
-                  }
-                }
-              });
-            },
-            child: const Icon(
-              Icons.forward_10_rounded,
-              color: Colors.white,
+            ListView(
+              shrinkWrap: true,
+              children: listSpeed
+                  .map((speed) => BuildSpeed(
+                        setPlaybackSpeed: setPlaybackSpeed,
+                        speed: speed,
+                        currentSpeed: currentSpeed,
+                      ))
+                  .toList(),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  void setPlaybackSpeed(double speed) {
+    controller.setSpeed(speed);
+
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   Widget _customBottomVideo() {
@@ -476,9 +464,14 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
                         ),
                 ),
                 Expanded(child: customProgressBar()),
-                Text((controller.videoPlayerController?.value.duration ?? 0)
-                    .toString()
-                    .split('.')[0]),
+                Text(
+                  formatedTime(controller
+                          .videoPlayerController?.value.duration?.inSeconds ??
+                      0),
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
                 InkWell(
                   child: Container(
                     decoration: BoxDecoration(
@@ -532,42 +525,43 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
                   0,
               setState(() {})
             }
+          else if (event.betterPlayerEventType ==
+              BetterPlayerEventType.setSpeed)
+            {currentSpeed = event.parameters?['speed']}
         });
 
     if ((duration != 0)) {
       return Slider(
-        value: max(0, min(progress, 100)),
+        value: max(0, min(progress ?? 0, 100)),
         min: 0,
         max: 100,
         divisions: 100,
         label: timeRemained,
         onChanged: (value) {
-          setState(() {
-            controller.addEventsListener(
-              (event) => {
-                if (event.betterPlayerEventType ==
-                    BetterPlayerEventType.progress)
-                  {
-                    progress = (event.parameters?['progress'].inSeconds /
-                        controller
-                            .videoPlayerController?.value.duration?.inSeconds)
-                  }
-              },
-            );
-          });
+          setState(
+            () {
+              controller.addEventsListener(
+                (event) => {
+                  if (event.betterPlayerEventType ==
+                      BetterPlayerEventType.progress)
+                    {
+                      progress = (event.parameters?['progress'].inSeconds /
+                          controller
+                              .videoPlayerController?.value.duration?.inSeconds)
+                    }
+                },
+              );
+            },
+          );
         },
         onChangeStart: (value) {
           controller.pause();
         },
         onChangeEnd: (value) async {
-          final duration =
-              controller.videoPlayerController?.value.duration?.inSeconds;
-          if (duration != null) {
-            var newValue = max(0, min(value, 99)) * 0.01;
-            var seconds = (duration * newValue).toInt();
-            await controller.seekTo(Duration(seconds: seconds));
-            controller.play();
-          }
+          var newValue = max(0, min(value, 99)) * 0.01;
+          var seconds = (duration * newValue).toInt();
+          await controller.seekTo(Duration(seconds: seconds));
+          controller.play();
         },
       );
     } else {
