@@ -18,12 +18,11 @@ class BuildChangedTrack extends StatelessWidget {
       child: TextButton(
         onPressed: () => setTrack.call(track),
         child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            '${track.width}x${track.height}',
-            style: const TextStyle(color: Colors.black, fontSize: 16),
-          ),
-        ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '${track.width}x${track.height}',
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            )),
       ),
     );
   }

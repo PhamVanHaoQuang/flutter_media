@@ -1,13 +1,7 @@
-import 'dart:math';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_learn/helper/formated_time.dart';
-import 'package:flutter_learn/presentation/better_player/widget/build_change_track.dart';
-import 'package:flutter_learn/presentation/better_player/widget/build_speed.dart';
-import 'package:flutter_learn/presentation/better_player/widget/custom_middle_control_video.dart';
-import 'package:flutter_learn/presentation/better_player/widget/custom_top_control_video.dart';
-
+import 'package:flutter_learn/presentation/better_player/widget/custom_control.dart';
 class VideoBetterPlayerScreen extends StatefulWidget {
   final String linkUrl;
   const VideoBetterPlayerScreen({
@@ -27,7 +21,7 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
   final GlobalKey<ScaffoldState> videoScaffold = GlobalKey();
 
   List<BetterPlayerAsmsTrack> listTracks = [];
-  List<double> listSpeed = [0.25, 0.5, 1.0, 1.5, 1.75, 2.0];
+
   double currentSpeed = 1.0;
 
   @override
@@ -42,7 +36,9 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
     betterPlayerConfiguration = BetterPlayerConfiguration(
         autoPlay: true,
         looping: false,
-        deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
+        deviceOrientationsAfterFullScreen: [
+          DeviceOrientation.portraitUp,
+        ],
         deviceOrientationsOnFullScreen: [
           DeviceOrientation.landscapeRight,
           DeviceOrientation.landscapeLeft
@@ -55,8 +51,10 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
           playerTheme: BetterPlayerTheme.custom,
           customControlsBuilder: _customControl,
         ));
-    controller = BetterPlayerController(betterPlayerConfiguration,
-        betterPlayerDataSource: betterPlayerDataSource);
+    controller = BetterPlayerController(
+      betterPlayerConfiguration,
+      betterPlayerDataSource: betterPlayerDataSource,
+    );
     controller.addEventsListener(_videoEventsListener);
   }
 
@@ -180,384 +178,19 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
 
   Widget _customControl(BetterPlayerController controller,
       Function(bool visbility) onControlsVisibilityChanged) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomTopControlVideo(
-                onShowBottomSheet: showBottomSheet,
-              ),
-
-              CustomMiddleControlVideo(
-                controller: controller,
-              ),
-              //   _customMiddleVideo(),
-              _customBottomVideo()
-            ],
-          ),
-        ),
-      ],
-    );
+    return CustomController(
+        controller: controller,
+        listTracks: listTracks,
+        onControlsVisibilityChanged: onControlsVisibilityChanged);
   }
 
-  void showBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      builder: (context) => Padding(
-        padding:
-            const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 80),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Cài đặt',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            InkWell(
-              onTap: showQuanlityBottomSheet,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: const [
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        'Quanlity',
-                        style: TextStyle(
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            InkWell(
-              onTap: showSpeedBottomSheet,
-              child: Row(
-                children: const [
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    'Speed',
-                    style: TextStyle(
-                        // fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 32,
-            ),
-            InkWell(
-              onTap: () {},
-              child: Row(
-                children: const [
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    'Subtitles',
-                    style: TextStyle(
-                        // fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  
 
-  void showQuanlityBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      builder: (context) => Padding(
-        padding:
-            const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                InkWell(
-                  child: const Icon(
-                    Icons.chevron_left_outlined,
-                    color: Colors.black,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                const Text(
-                  'Cài đặt',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 420),
-              child: ListView(
-                shrinkWrap: true,
-                children: listTracks
-                    .map((track) =>
-                        BuildChangedTrack(track: track, setTrack: setTrack))
-                    .toList(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  
 
-  void setTrack(BetterPlayerAsmsTrack track) {
-    controller.setTrack(track);
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-  }
+  
 
-  void showSpeedBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      isScrollControlled: true,
-      builder: (context) => Padding(
-        padding:
-            const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                InkWell(
-                  child: const Icon(
-                    Icons.chevron_left_outlined,
-                    color: Colors.black,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                const Text(
-                  'Cài đặt',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ListView(
-              shrinkWrap: true,
-              children: listSpeed
-                  .map((speed) => BuildSpeed(
-                        setPlaybackSpeed: setPlaybackSpeed,
-                        speed: speed,
-                        currentSpeed: currentSpeed,
-                      ))
-                  .toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  
 
-  void setPlaybackSpeed(double speed) {
-    controller.setSpeed(speed);
-
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-  }
-
-  Widget _customBottomVideo() {
-    final isMute = (controller.videoPlayerController?.value.volume ?? 0) > 0;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              InkWell(
-                onTap: () async {
-                  if (isMute) {
-                    controller.setVolume(0);
-                  } else {
-                    controller.setVolume(1);
-                  }
-                  setState(() {});
-                },
-                child: (isMute)
-                    ? const Icon(
-                        Icons.volume_up_outlined,
-                        color: Colors.white,
-                      )
-                    : const Icon(
-                        Icons.volume_off_outlined,
-                        color: Colors.white,
-                      ),
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              Text(
-                formatedTime(controller
-                            .videoPlayerController?.value.position.inSeconds ??
-                        0) +
-                    ' / ' +
-                    formatedTime(controller
-                            .videoPlayerController?.value.duration?.inSeconds ??
-                        0),
-              ),
-              Expanded(child: customProgressBar()),
-              InkWell(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: Icon(
-                    controller.isFullScreen
-                        ? Icons.fullscreen_exit
-                        : Icons.fullscreen,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                ),
-                onTap: () {
-                  if (controller.isFullScreen) {
-                    controller.exitFullScreen();
-                  } else {
-                    controller.enterFullScreen();
-                  }
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget customProgressBar() {
-    final position =
-        controller.videoPlayerController?.value.position.inSeconds ?? 0;
-    final duration =
-        controller.videoPlayerController?.value.duration?.inSeconds ?? 0;
-    final head =
-        controller.videoPlayerController?.value.position.inSeconds ?? 0;
-    final remained = max(0, duration - head);
-    String timeRemained = formatedTime(remained);
-
-    progress = position / duration * 100;
-    controller.addEventsListener((event) => {
-          if (event.betterPlayerEventType == BetterPlayerEventType.progress)
-            {
-              progress = (event.parameters?['progress'].inSeconds /
-                      controller
-                          .videoPlayerController?.value.duration?.inSeconds) ??
-                  0,
-              setState(() {})
-            }
-          else if (event.betterPlayerEventType ==
-              BetterPlayerEventType.setSpeed)
-            {currentSpeed = event.parameters?['speed']}
-        });
-
-    if ((duration != 0)) {
-      return SliderTheme(
-        data: SliderThemeData(
-          trackHeight: 3,
-          overlayShape: SliderComponentShape.noOverlay,
-          activeTrackColor: const Color(0xff1EC5F9),
-          inactiveTrackColor: Colors.white.withOpacity(0.5),
-          thumbColor: const Color(0xff1EC5F9),
-        ),
-        child: Slider(
-          value: max(0, min(progress ?? 0, 100)),
-          min: 0,
-          max: 100,
-          divisions: 100,
-          label: formatedTime(
-              controller.videoPlayerController?.value.position.inSeconds ?? 0),
-          onChanged: (value) async {
-            var newValue = max(0, min(value, 99)) * 0.01;
-            var seconds = (duration * newValue).toInt();
-            await controller.seekTo(Duration(seconds: seconds));
-            setState(
-              () {},
-            );
-          },
-          onChangeStart: (value) {
-            controller.pause();
-          },
-          onChangeEnd: (value) async {
-            var newValue = max(0, min(value, 99)) * 0.01;
-            var seconds = (duration * newValue).toInt();
-            await controller.seekTo(Duration(seconds: seconds));
-            controller.play();
-          },
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
+  
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'build_dropdown_button.dart';
 
 class CustomTopControlVideo extends StatefulWidget {
   final VoidCallback? onBack;
@@ -57,17 +58,9 @@ class _CustomTopControlVideoState extends State<CustomTopControlVideo> {
                 size: 21,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 8.0, bottom: 8, top: 8, right: 12),
-              child: InkWell(
-                onTap: widget.onShowBottomSheet,
-                child: const Icon(
-                  Icons.more_vert_outlined,
-                  color: Colors.white,
-                  size: 21,
-                ),
-              ),
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: CustomDropdownButton(),
             ),
           ],
         ),

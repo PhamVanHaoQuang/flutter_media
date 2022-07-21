@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BuildSpeed extends StatelessWidget {
   final double speed;
   final double currentSpeed;
-  final Function(double speed) setPlaybackSpeed;
+  final void Function(double speed) setPlaybackSpeed;
 
   const BuildSpeed({
     Key? key,
