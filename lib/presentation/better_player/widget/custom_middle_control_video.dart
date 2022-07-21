@@ -37,10 +37,22 @@ class _CustomMiddleControlVideoState extends State<CustomMiddleControlVideo> {
           child: const Icon(
             Icons.replay_10_rounded,
             color: Colors.white,
+            size: 24,
           ),
         ),
         const SizedBox(
-          width: 32,
+          width: 16,
+        ),
+        InkWell(
+          onTap: () {},
+          child: const Icon(
+            Icons.fast_rewind,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+        const SizedBox(
+          width: 26,
         ),
         InkWell(
           onTap: () {
@@ -55,10 +67,22 @@ class _CustomMiddleControlVideoState extends State<CustomMiddleControlVideo> {
           child: Icon(
             widget.controller.isPlaying()! ? Icons.pause : Icons.play_arrow,
             color: Colors.white,
+            size: 30,
           ),
         ),
         const SizedBox(
-          width: 32,
+          width: 26,
+        ),
+        InkWell(
+          onTap: () {},
+          child: const Icon(
+            Icons.fast_forward,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+        const SizedBox(
+          width: 16,
         ),
         InkWell(
           onTap: () async {
@@ -81,6 +105,7 @@ class _CustomMiddleControlVideoState extends State<CustomMiddleControlVideo> {
           child: const Icon(
             Icons.forward_10_rounded,
             color: Colors.white,
+            size: 24,
           ),
         ),
       ],

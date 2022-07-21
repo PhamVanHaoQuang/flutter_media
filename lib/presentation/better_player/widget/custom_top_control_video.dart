@@ -43,10 +43,8 @@ class _CustomTopControlVideoState extends State<CustomTopControlVideo> {
                 activeColor: const Color(0xff1EC5F9),
                 value: isSwitched,
                 onChanged: (value) {
-                  // value = !value;
                   setState(() {
                     isSwitched = !isSwitched;
-                    print(isSwitched);
                   });
                 },
               ),
@@ -56,6 +54,7 @@ class _CustomTopControlVideoState extends State<CustomTopControlVideo> {
               child: const Icon(
                 Icons.settings_outlined,
                 color: Colors.white,
+                size: 21,
               ),
             ),
             Padding(
@@ -66,6 +65,7 @@ class _CustomTopControlVideoState extends State<CustomTopControlVideo> {
                 child: const Icon(
                   Icons.more_vert_outlined,
                   color: Colors.white,
+                  size: 21,
                 ),
               ),
             ),

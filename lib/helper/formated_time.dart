@@ -8,12 +8,11 @@ String formatedTime(int secTime) {
   int sec = secTime % 60;
 
   String parsedTime =
-      getParsedTime(min.toString()) + " : " + getParsedTime(sec.toString());
+      getParsedTime(min.toString()) + ":" + getParsedTime(sec.toString());
 
   return parsedTime;
 }
 
-
-String convertTwo(int value){
-  return value <10 ? "0$value" : "$value";
+String convertTwo(int value) {
+  return value < 10 ? "0$value" : "$value";
 }

@@ -457,18 +457,22 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
                         color: Colors.white,
                       ),
               ),
-              Expanded(child: customProgressBar()),
-              Text(
-                formatedTime(controller
-                        .videoPlayerController?.value.duration?.inSeconds ??
-                    0),
-              ),
               const SizedBox(
                 width: 4,
               ),
+              Text(
+                formatedTime(controller
+                            .videoPlayerController?.value.position.inSeconds ??
+                        0) +
+                    ' / ' +
+                    formatedTime(controller
+                            .videoPlayerController?.value.duration?.inSeconds ??
+                        0),
+              ),
+              Expanded(child: customProgressBar()),
               InkWell(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: Icon(
                     controller.isFullScreen
                         ? Icons.fullscreen_exit
@@ -500,7 +504,7 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
     final head =
         controller.videoPlayerController?.value.position.inSeconds ?? 0;
     final remained = max(0, duration - head);
-    final timeRemained = formatedTime(remained);
+    String timeRemained = formatedTime(remained);
 
     progress = position / duration * 100;
     controller.addEventsListener((event) => {
@@ -518,38 +522,39 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
         });
 
     if ((duration != 0)) {
-      return Slider(
-        value: max(0, min(progress ?? 0, 100)),
-        min: 0,
-        max: 100,
-        divisions: 100,
-        label: timeRemained,
-        onChanged: (value) {
-          setState(
-            () {
-              controller.addEventsListener(
-                (event) => {
-                  if (event.betterPlayerEventType ==
-                      BetterPlayerEventType.progress)
-                    {
-                      progress = (event.parameters?['progress'].inSeconds /
-                          controller
-                              .videoPlayerController?.value.duration?.inSeconds)
-                    }
-                },
-              );
-            },
-          );
-        },
-        onChangeStart: (value) {
-          controller.pause();
-        },
-        onChangeEnd: (value) async {
-          var newValue = max(0, min(value, 99)) * 0.01;
-          var seconds = (duration * newValue).toInt();
-          await controller.seekTo(Duration(seconds: seconds));
-          controller.play();
-        },
+      return SliderTheme(
+        data: SliderThemeData(
+          trackHeight: 3,
+          overlayShape: SliderComponentShape.noOverlay,
+          activeTrackColor: const Color(0xff1EC5F9),
+          inactiveTrackColor: Colors.white.withOpacity(0.5),
+          thumbColor: const Color(0xff1EC5F9),
+        ),
+        child: Slider(
+          value: max(0, min(progress ?? 0, 100)),
+          min: 0,
+          max: 100,
+          divisions: 100,
+          label: formatedTime(
+              controller.videoPlayerController?.value.position.inSeconds ?? 0),
+          onChanged: (value) async {
+            var newValue = max(0, min(value, 99)) * 0.01;
+            var seconds = (duration * newValue).toInt();
+            await controller.seekTo(Duration(seconds: seconds));
+            setState(
+              () {},
+            );
+          },
+          onChangeStart: (value) {
+            controller.pause();
+          },
+          onChangeEnd: (value) async {
+            var newValue = max(0, min(value, 99)) * 0.01;
+            var seconds = (duration * newValue).toInt();
+            await controller.seekTo(Duration(seconds: seconds));
+            controller.play();
+          },
+        ),
       );
     } else {
       return Container();
