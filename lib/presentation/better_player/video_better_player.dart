@@ -2,6 +2,7 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_learn/presentation/better_player/widget/custom_control.dart';
+
 class VideoBetterPlayerScreen extends StatefulWidget {
   final String linkUrl;
   const VideoBetterPlayerScreen({
@@ -30,6 +31,22 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       widget.linkUrl,
+      // subtitles: [
+      //   BetterPlayerSubtitlesSource(
+      //     type: BetterPlayerSubtitlesSourceType.network,
+      //     name: 'VN',
+      //      urls: [
+      //       "https://cdnstatic.mcvgo.vn/subtitle/srt/Bad Guys The Movie (2019).vie.srt"
+      //     ],
+      //   ),
+      //   BetterPlayerSubtitlesSource(
+      //     type: BetterPlayerSubtitlesSourceType.network,
+      //     name: 'EN',
+      //      urls: [
+      //       "https://cdnstatic.mcvgo.vn/subtitle/srt/the-bad-guys-reign-of-chaos_english.rtt"
+      //     ],
+      //   )
+      // ]
       // resolutions: {'360p60': '', '720p60': '', '1080p60': ''},
     );
 
@@ -183,14 +200,4 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
         listTracks: listTracks,
         onControlsVisibilityChanged: onControlsVisibilityChanged);
   }
-
-  
-
-  
-
-  
-
-  
-
-  
 }

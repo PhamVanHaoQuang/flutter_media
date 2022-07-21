@@ -22,7 +22,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
   void initState() {
     super.initState();
     futureFiles = FirebaseStorage.instance.ref('/files').list();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await splitList().whenComplete(() {
         setState(() {});
       });

@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_learn/model/m3u8.dart';
-import 'package:gallery_saver/files.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,9 +33,6 @@ class _VideoItemState extends State<VideoItem> with WidgetsBindingObserver {
       'content-type': 'application/x-www-form-urlencoded'
     };
     var response = await http.get(Uri.parse(link ?? ''), headers: header);
-
-    print('Response body: ${response.body}');
-    print('quangaaaa');
     splitData(response.body);
   }
 
@@ -114,7 +109,7 @@ class _VideoItemState extends State<VideoItem> with WidgetsBindingObserver {
   void dispose() {
     _chewieController.dispose();
     _videoPlayerController.dispose();
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
