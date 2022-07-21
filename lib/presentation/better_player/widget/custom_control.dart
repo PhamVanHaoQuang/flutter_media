@@ -23,6 +23,7 @@ class CustomController extends StatefulWidget {
 class _MyControllerState extends State<CustomController> {
   List<double> listSpeed = [0.25, 0.5, 1.0, 1.5, 1.75, 2.0];
   double currentSpeed = 1.0;
+  BetterPlayerAsmsTrack? currentTrack;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -79,16 +80,41 @@ class _MyControllerState extends State<CustomController> {
                     height: 20,
                   ),
                   Row(
-                    children: const [
-                      SizedBox(
-                        width: 15,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: const [
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(
+                            'Quanlity',
+                            style: TextStyle(
+                                // fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Colors.black),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Quanlity',
-                        style: TextStyle(
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.black),
+                      Row(
+                        children: [
+                          Text(
+                            currentTrack != null
+                                ? '${currentTrack!.height}p60'
+                                : '',
+                            style: const TextStyle(
+                                color: Color(0xff8A8A8A),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          const Icon(
+                            Icons.navigate_next_outlined,
+                            color: Color(0xff8A8A8A),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          )
+                        ],
                       ),
                     ],
                   ),
@@ -104,17 +130,40 @@ class _MyControllerState extends State<CustomController> {
             InkWell(
               onTap: showSpeedBottomSheet,
               child: Row(
-                children: const [
-                  SizedBox(
-                    width: 15,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: const [
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        'Speed',
+                        style: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.black),
+                      )
+                    ],
                   ),
-                  Text(
-                    'Speed',
-                    style: TextStyle(
-                        // fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black),
-                  )
+                  Row(
+                    children: [
+                      Text(
+                        currentSpeed.toString(),
+                        style: const TextStyle(
+                            color: Color(0xff8A8A8A),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      const Icon(
+                        Icons.navigate_next_outlined,
+                        color: Color(0xff8A8A8A),
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -197,6 +246,7 @@ class _MyControllerState extends State<CustomController> {
                         track: track,
                         setTrack: (value) {
                           widget.controller.setTrack(track);
+                          currentTrack = value;
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         }))
