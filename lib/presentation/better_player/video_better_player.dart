@@ -18,7 +18,6 @@ class VideoBetterPlayerScreen extends StatefulWidget {
 class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
   late BetterPlayerConfiguration betterPlayerConfiguration;
   late BetterPlayerController controller;
-  double? progress = 0.0;
   final GlobalKey<ScaffoldState> videoScaffold = GlobalKey();
 
   List<BetterPlayerAsmsTrack> listTracks = [];
@@ -73,6 +72,7 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
       betterPlayerDataSource: betterPlayerDataSource,
     );
     controller.addEventsListener(_videoEventsListener);
+
   }
 
   _videoEventsListener(BetterPlayerEvent event) {

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +18,62 @@ class CustomBottomControlVideo extends StatefulWidget {
 }
 
 class _CustomBottomControlVideoState extends State<CustomBottomControlVideo> {
+  double progress = 0;
+  int position = 0;
+
+  late bool isMute;
+  late int duration;
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scheduleMicrotask(() async {
+      widget.controller.addEventsListener((event) {
+        if (event.betterPlayerEventType == BetterPlayerEventType.progress) {
+          if (duration == 0) return;
+          progress = event.parameters?['progress'].inSeconds / duration;
+          position = widget
+                  .controller.videoPlayerController?.value.position.inSeconds ??
+              0;
+          setState(() {});
+        }
+      });
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomBottomControlVideo oldWidget) {
+    _init();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _init() {
+    isMute = (widget.controller.videoPlayerController?.value.volume ?? 0) > 0;
+
+    position =
+        widget.controller.videoPlayerController?.value.position.inSeconds ?? 0;
+  }
+
+  void getDuration() async {
+    if (widget.controller.isVideoInitialized() ?? false) {
+      duration =
+          widget.controller.videoPlayerController?.value.duration?.inSeconds ??
+              0;
+    } else {
+      duration = 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isMute =
-        (widget.controller.videoPlayerController?.value.volume ?? 0) > 0;
+    getDuration();
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -52,6 +107,7 @@ class _CustomBottomControlVideoState extends State<CustomBottomControlVideo> {
                 width: 4,
               ),
               Text(
+                //widget.controller.videoPlayerController?.value.position.inSeconds ?? 0
                 formatedTime(widget.controller.videoPlayerController?.value
                             .position.inSeconds ??
                         0) +
@@ -62,7 +118,25 @@ class _CustomBottomControlVideoState extends State<CustomBottomControlVideo> {
               ),
               Expanded(
                   child: CustomProgressBar(
-                controller: widget.controller,
+                progress: progress,
+                onChangeEnd: (value) async {
+                  var newValue = max(0, min(value, 99)) * 0.01;
+                  var seconds = (duration * newValue).toInt();
+                  await widget.controller.seekTo(Duration(seconds: seconds));
+                  widget.controller.play();
+                },
+                onChangeStart: (value) {
+                  widget.controller.pause();
+                },
+                position: position,
+                onChanged: (value) async {
+                  var newValue = max(0, min(value, 99)) * 0.01;
+                  var seconds = (duration * newValue).toInt();
+                  await widget.controller.seekTo(Duration(seconds: seconds));
+                  setState(
+                    () {},
+                  );
+                },
               )),
               InkWell(
                 child: Padding(

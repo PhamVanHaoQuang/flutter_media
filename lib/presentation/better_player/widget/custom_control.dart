@@ -225,7 +225,7 @@ class _MyControllerState extends State<CustomController> {
                   width: 8,
                 ),
                 const Text(
-                  'Cài đặt',
+                  'Chất lượng',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -291,7 +291,7 @@ class _MyControllerState extends State<CustomController> {
                   width: 8,
                 ),
                 const Text(
-                  'Cài đặt',
+                  'Tốc độ',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,

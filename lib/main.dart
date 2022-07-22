@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Uri link = Uri(path: 'https://www.youtube.com/watch?v=ndVxD9u95Z0');
 
   String link1 =
-      // 'https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8';
+      //  'https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8';
       //live stream test quanlity
       //  'https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8';
 
@@ -30,7 +30,13 @@ class MyApp extends StatelessWidget {
       // 'https://live.xemtv24h.com/vod/vod/smil:PHIMBO_PhuDe_BayTinhYeu_E01.smil/playlist.m3u8';
 
       // biet doi bat hao
-      'https://live.xemtv24h.com/vod/vod/smil:PHUDE_.Biet.Doi.Bat.Hao.The.Bad.Guys.Reign.of.Chaos.2019.smil/playlist.m3u8';
+      // 'https://live.xemtv24h.com/vod/vod/smil:PHUDE_.Biet.Doi.Bat.Hao.The.Bad.Guys.Reign.of.Chaos.2019.smil/playlist.m3u8';
+
+      //apple trailer
+      //'http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8';
+
+      //4k
+      'http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8';
 
   @override
   Widget build(BuildContext context) {
