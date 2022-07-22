@@ -24,7 +24,7 @@ class _CustomMiddleControlVideoState extends State<CustomMiddleControlVideo> {
             setState(() {
               if (widget.controller.isPlaying()!) {
                 Duration rewindDuration =
-                    Duration(seconds: (videoDuration!.inSeconds - 2));
+                    Duration(seconds: (videoDuration!.inSeconds - 10));
                 if (rewindDuration <
                     widget.controller.videoPlayerController!.value.duration!) {
                   widget.controller.seekTo(const Duration(seconds: 0));
@@ -88,19 +88,23 @@ class _CustomMiddleControlVideoState extends State<CustomMiddleControlVideo> {
           onTap: () async {
             Duration? videoDuration =
                 await widget.controller.videoPlayerController?.position;
-            setState(() {
-              if (widget.controller.isPlaying()!) {
-                Duration forwardDuration =
-                    Duration(seconds: (videoDuration!.inSeconds + 2));
+
+            if (widget.controller.isPlaying()!) {
+              Duration forwardDuration =
+                  Duration(seconds: (videoDuration!.inSeconds + 10));
+              setState(() {
                 if (forwardDuration >
                     widget.controller.videoPlayerController!.value.duration!) {
-                  widget.controller.seekTo(const Duration(seconds: 0));
+                  widget.controller.seekTo(Duration(
+                      seconds: widget.controller.videoPlayerController!.value
+                              .duration?.inSeconds ??
+                          0));
                   widget.controller.pause();
                 } else {
                   widget.controller.seekTo(forwardDuration);
                 }
-              }
-            });
+              });
+            }
           },
           child: const Icon(
             Icons.forward_10_rounded,

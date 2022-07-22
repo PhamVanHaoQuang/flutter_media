@@ -310,17 +310,19 @@ class _MyControllerState extends State<CustomController> {
               child: ListView(
                 // shrinkWrap: true,
                 children: listSpeed
-                    .map((speed) => BuildSpeed(
-                          setPlaybackSpeed: (value) {
-                            widget.controller.setSpeed(value);
+                    .map(
+                      (speed) => BuildSpeed(
+                        setPlaybackSpeed: (value) {
+                          widget.controller.setSpeed(value);
 
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            currentSpeed = value;
-                          },
-                          speed: speed,
-                          currentSpeed: currentSpeed,
-                        ))
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          currentSpeed = value;
+                        },
+                        speed: speed,
+                        currentSpeed: currentSpeed,
+                      ),
+                    )
                     .toList(),
               ),
             ),

@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
       //  'https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8';
 
       // bay tinh yeu
-      'https://live.xemtv24h.com/vod/vod/smil:PHIMBO_PhuDe_BayTinhYeu_E01.smil/playlist.m3u8';
+      // 'https://live.xemtv24h.com/vod/vod/smil:PHIMBO_PhuDe_BayTinhYeu_E01.smil/playlist.m3u8';
 
-  // biet doi bat hao
-  // 'https://live.xemtv24h.com/vod/vod/smil:PHUDE_.Biet.Doi.Bat.Hao.The.Bad.Guys.Reign.of.Chaos.2019.smil/playlist.m3u8';
+      // biet doi bat hao
+      'https://live.xemtv24h.com/vod/vod/smil:PHUDE_.Biet.Doi.Bat.Hao.The.Bad.Guys.Reign.of.Chaos.2019.smil/playlist.m3u8';
 
   @override
   Widget build(BuildContext context) {
