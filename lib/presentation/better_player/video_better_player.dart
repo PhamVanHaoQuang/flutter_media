@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +25,10 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
   List<BetterPlayerAsmsTrack> listTracks = [];
 
   double currentSpeed = 1.0;
+  late Timer? timeToHideControl;
+  int _timeRemain = 3;
+
+  var _opacity = 0.0;
 
   @override
   void initState() {
@@ -46,7 +52,6 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
       //     ],
       //   )
       // ]
-      // resolutions: {'360p60': '', '720p60': '', '1080p60': ''},
     );
 
     betterPlayerConfiguration = BetterPlayerConfiguration(
@@ -72,12 +77,18 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
       betterPlayerDataSource: betterPlayerDataSource,
     );
     controller.addEventsListener(_videoEventsListener);
+  }
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   _videoEventsListener(BetterPlayerEvent event) {
     switch (event.betterPlayerEventType) {
       case BetterPlayerEventType.initialized:
+        print('quang need ${controller.isPictureInPictureSupported()}');
         setState(() {
           listTracks = controller.betterPlayerAsmsTracks;
         });
@@ -170,6 +181,7 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey _betterPlayerKey = GlobalKey();
     final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -184,6 +196,7 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
                 aspectRatio: 16 / 9,
                 child: BetterPlayer(
                   controller: controller,
+                  // key: _betterPlayerKey,
                 ),
               ),
             ),
@@ -195,9 +208,65 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
 
   Widget _customControl(BetterPlayerController controller,
       Function(bool visbility) onControlsVisibilityChanged) {
-    return CustomController(
-        controller: controller,
-        listTracks: listTracks,
-        onControlsVisibilityChanged: onControlsVisibilityChanged);
+    return GestureDetector(
+      onTap: () {
+        if (_opacity == 0.0) {
+          _opacity = 1.0;
+        } else {
+          _opacity = 0.0;
+        }
+        setState(() {});
+      },
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedOpacity(
+        opacity: _opacity,
+        duration: const Duration(milliseconds: 600),
+        child: CustomController(
+            controller: controller,
+            listTracks: listTracks,
+            onControlsVisibilityChanged: onControlsVisibilityChanged),
+      ),
+    );
   }
 }
+
+
+
+
+  // timeToHideControl = Timer(const Duration(seconds: 3), () {
+  //           if (_timeRemain == 0) {
+  //             _opacity = 0;
+  //             timeToHideControl?.cancel();
+  //             setState(() {});
+  //           } else {
+  //             _opacity = 1.0;
+  //             setState(() {
+  //               _timeRemain--;
+  //             });
+  //           }
+  //         });
+
+  //  timeToHideControl?.cancel();
+
+// isHide
+// func show()
+// func hide()
+// startCountDown()
+// cancelCountDown()
+//
+// if(isHide){
+    // show();
+    // startCountDown();
+      // if countDown ==0 {
+      //    hide();
+      //    cancelCountDown();
+      // } else {
+      //    show();
+      //    startCountDown();
+      // }
+      // 
+      // 
+// } else {
+  // hide();
+  // cancelCountDown()'
+// }

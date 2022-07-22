@@ -87,6 +87,8 @@ class MenuItems {
     switch (item) {
       case MenuItems.small:
         //Do something
+
+        
         break;
       case MenuItems.tv:
         //Do something

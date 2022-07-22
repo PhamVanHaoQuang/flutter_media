@@ -14,7 +14,7 @@ class CustomProgressBar extends StatefulWidget {
       : super(key: key);
   final double progress;
   final int position;
-  final void Function(double newValue) onChanged;
+  final void Function(double value) onChanged;
   final void Function(double value) onChangeStart;
   final void Function(double value) onChangeEnd;
   @override
@@ -42,7 +42,8 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
     position = widget.position;
   }
 
-  Widget customProgressBar() {
+  @override
+  Widget build(BuildContext context) {
     return progress != 0
         ? SliderTheme(
             data: SliderThemeData(
@@ -64,10 +65,5 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
             ),
           )
         : const SizedBox();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return customProgressBar();
   }
 }

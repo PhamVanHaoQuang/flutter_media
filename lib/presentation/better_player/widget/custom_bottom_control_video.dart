@@ -107,7 +107,6 @@ class _CustomBottomControlVideoState extends State<CustomBottomControlVideo> {
                 width: 4,
               ),
               Text(
-                //widget.controller.videoPlayerController?.value.position.inSeconds ?? 0
                 formatedTime(widget.controller.videoPlayerController?.value
                             .position.inSeconds ??
                         0) +
@@ -117,27 +116,26 @@ class _CustomBottomControlVideoState extends State<CustomBottomControlVideo> {
                         0),
               ),
               Expanded(
-                  child: CustomProgressBar(
-                progress: progress,
-                onChangeEnd: (value) async {
-                  var newValue = max(0, min(value, 99)) * 0.01;
-                  var seconds = (duration * newValue).toInt();
-                  await widget.controller.seekTo(Duration(seconds: seconds));
-                  widget.controller.play();
-                },
-                onChangeStart: (value) {
-                  widget.controller.pause();
-                },
-                position: position,
-                onChanged: (value) async {
-                  var newValue = max(0, min(value, 99)) * 0.01;
-                  var seconds = (duration * newValue).toInt();
-                  await widget.controller.seekTo(Duration(seconds: seconds));
-                  setState(
-                    () {},
-                  );
-                },
-              )),
+                child: CustomProgressBar(
+                  progress: progress,
+                  position: position,
+                  onChangeStart: (value) {
+                    widget.controller.pause();
+                  },
+                  onChanged: (value) {
+                    var newValue = max(1, min(value, 99)) * 0.01;
+                    var seconds = (duration * newValue).toInt();
+                    widget.controller.seekTo(Duration(seconds: seconds));
+                    setState(() {});
+                  },
+                  onChangeEnd: (value) async {
+                    var newValue = max(1, min(value, 99)) * 0.01;
+                    var seconds = (duration * newValue).toInt();
+                    await widget.controller.seekTo(Duration(seconds: seconds));
+                    widget.controller.play();
+                  },
+                ),
+              ),
               InkWell(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
