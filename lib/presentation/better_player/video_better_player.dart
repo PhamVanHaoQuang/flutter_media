@@ -26,8 +26,7 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
 
   double currentSpeed = 1.0;
   late Timer? timeToHideControl;
-  int _timeRemain = 3;
-
+  // int _timeRemain = 3;
   var _opacity = 0.0;
 
   @override
@@ -88,7 +87,6 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
   _videoEventsListener(BetterPlayerEvent event) {
     switch (event.betterPlayerEventType) {
       case BetterPlayerEventType.initialized:
-        print('quang need ${controller.isPictureInPictureSupported()}');
         setState(() {
           listTracks = controller.betterPlayerAsmsTracks;
         });
@@ -179,9 +177,10 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
     }
   }
 
+  final GlobalKey _betterPlayerKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    GlobalKey _betterPlayerKey = GlobalKey();
     final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -196,7 +195,7 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
                 aspectRatio: 16 / 9,
                 child: BetterPlayer(
                   controller: controller,
-                  // key: _betterPlayerKey,
+                  key: _betterPlayerKey,
                 ),
               ),
             ),
@@ -222,9 +221,12 @@ class _VideoBetterPlayerScreenState extends State<VideoBetterPlayerScreen> {
         opacity: _opacity,
         duration: const Duration(milliseconds: 600),
         child: CustomController(
-            controller: controller,
-            listTracks: listTracks,
-            onControlsVisibilityChanged: onControlsVisibilityChanged),
+          controller: controller,
+          listTracks: listTracks,
+          onControlsVisibilityChanged: onControlsVisibilityChanged,
+          globalKey: _betterPlayerKey,
+          
+        ),
       ),
     );
   }

@@ -37,6 +37,7 @@ dependencies:
   file_picker: ^4.6.1
   firebase_core: ^1.18.0
   firebase_storage: ^10.2.18
+  provider: ^6.0.3
 
   # Package to storage image
   dio: ^4.0.6

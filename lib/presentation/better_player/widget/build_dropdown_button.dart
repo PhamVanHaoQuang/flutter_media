@@ -2,7 +2,11 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdownButton extends StatefulWidget {
-  const CustomDropdownButton({Key? key}) : super(key: key);
+  const CustomDropdownButton({
+    Key? key,
+    required this.showPIP,
+  }) : super(key: key);
+  final VoidCallback showPIP;
 
   @override
   State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
@@ -20,7 +24,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         ),
         customItemsHeight: 8,
         items: [
-          ...MenuItems.firstItems.map(
+          ...MenuItems.items.map(
             (item) => DropdownMenuItem<MenuItem>(
               value: item,
               child: MenuItems.buildItem(item),
@@ -28,7 +32,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           )
         ],
         onChanged: (value) {
-          MenuItems.onChanged(context, value as MenuItem);
+          MenuItems.onChanged(context, value as MenuItem, widget.showPIP);
         },
         itemHeight: 40,
         itemPadding: const EdgeInsets.only(left: 16, right: 16),
@@ -56,15 +60,13 @@ class MenuItem {
 }
 
 class MenuItems {
-  static const List<MenuItem> firstItems = [small, tv];
+  static const List<MenuItem> items = [small, tv];
   // static const List<MenuItem> secondItems = [logout];
 
   static const small =
       MenuItem(text: 'Trình phát thu nhỏ', icon: Icons.featured_video_outlined);
   static const tv =
       MenuItem(text: 'Phát qua TV', icon: Icons.connected_tv_outlined);
-  // static const settings = MenuItem(text: 'Settings', icon: Icons.settings);
-  // static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItem item) {
     return Row(
@@ -83,22 +85,16 @@ class MenuItems {
     );
   }
 
-  static onChanged(BuildContext context, MenuItem item) {
+  static onChanged(BuildContext context, MenuItem item, VoidCallback showPIP) {
     switch (item) {
       case MenuItems.small:
-        //Do something
-
-        
+        {
+          showPIP();
+        }
         break;
       case MenuItems.tv:
         //Do something
         break;
-      // case MenuItems.settings:
-      //   //Do something
-      //   break;
-      // case MenuItems.logout:
-      //   //Do something
-      //   break;
     }
   }
 }

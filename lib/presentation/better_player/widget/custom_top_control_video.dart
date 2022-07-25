@@ -4,8 +4,12 @@ import 'build_dropdown_button.dart';
 class CustomTopControlVideo extends StatefulWidget {
   final VoidCallback? onBack;
   final VoidCallback onShowBottomSheet;
+  final VoidCallback showPIP;
   const CustomTopControlVideo(
-      {Key? key, required this.onShowBottomSheet, this.onBack})
+      {Key? key,
+      required this.onShowBottomSheet,
+      this.onBack,
+      required this.showPIP})
       : super(key: key);
 
   @override
@@ -58,9 +62,11 @@ class _CustomTopControlVideoState extends State<CustomTopControlVideo> {
                 size: 21,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: CustomDropdownButton(),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: CustomDropdownButton(
+                showPIP: widget.showPIP,
+              ),
             ),
           ],
         ),

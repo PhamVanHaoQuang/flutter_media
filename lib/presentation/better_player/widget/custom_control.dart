@@ -1,5 +1,6 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
+import '../../picture_in_picture/pip_view_screen.dart';
 import 'build_change_track.dart';
 import 'build_speed.dart';
 import 'custom_bottom_control_video.dart';
@@ -11,11 +12,14 @@ class CustomController extends StatefulWidget {
       {Key? key,
       required this.controller,
       required this.onControlsVisibilityChanged,
-      required this.listTracks})
+      required this.listTracks,
+      required this.globalKey})
       : super(key: key);
   final BetterPlayerController controller;
   final List<BetterPlayerAsmsTrack> listTracks;
   final Function(bool visbility) onControlsVisibilityChanged;
+  final GlobalKey globalKey;
+
   @override
   State<CustomController> createState() => _MyControllerState();
 }
@@ -34,6 +38,7 @@ class _MyControllerState extends State<CustomController> {
             children: [
               CustomTopControlVideo(
                 onShowBottomSheet: showBottomSheet,
+                showPIP: showPIP,
               ),
               CustomMiddleControlVideo(
                 controller: widget.controller,
@@ -46,6 +51,14 @@ class _MyControllerState extends State<CustomController> {
         ),
       ],
     );
+  }
+
+  void showPIP() {
+   // PipViewScreen;
+    var isPipSupported = widget.controller.isPictureInPictureSupported();
+    print('is PIP Support $isPipSupported');
+    widget.controller.enablePictureInPicture(widget.globalKey);
+    print('enable PIP with Quang');
   }
 
   void showBottomSheet() {
