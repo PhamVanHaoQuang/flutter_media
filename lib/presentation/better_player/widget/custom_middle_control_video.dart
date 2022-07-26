@@ -43,14 +43,14 @@ class _CustomMiddleControlVideoState extends State<CustomMiddleControlVideo> {
         const SizedBox(
           width: 16,
         ),
-        InkWell(
-          onTap: () {},
-          child: const Icon(
-            Icons.fast_rewind,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
+        // InkWell(
+        //   onTap: () {},
+        //   child: const Icon(
+        //     Icons.fast_rewind,
+        //     color: Colors.white,
+        //     size: 30,
+        //   ),
+        // ),
         const SizedBox(
           width: 26,
         ),
@@ -73,14 +73,14 @@ class _CustomMiddleControlVideoState extends State<CustomMiddleControlVideo> {
         const SizedBox(
           width: 26,
         ),
-        InkWell(
-          onTap: () {},
-          child: const Icon(
-            Icons.fast_forward,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
+        // InkWell(
+        //   onTap: () {},
+        //   child: const Icon(
+        //     Icons.fast_forward,
+        //     color: Colors.white,
+        //     size: 30,
+        //   ),
+        // ),
         const SizedBox(
           width: 16,
         ),
